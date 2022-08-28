@@ -1,74 +1,57 @@
+#!/usr/bin/python3
+import tkinter as tk
 import random
 
-intro_string = """Hello,
+class PasswordGen:
+    def __init__(self, master=None):
+        self.length = tk.IntVar()
+        # build ui
+        self.toplevel1 = tk.Tk() if master is None else tk.Toplevel(master)
+        self.toplevel1.configure(width=200)
+        self.toplevel1.geometry("190x220")
+        self.toplevel1.resizable(False, False)
+        self.toplevel1.title("Password Generator")
+        self.label1 = tk.Label(self.toplevel1)
+        self.label1.configure(font="{calibri} 14 {bold}", text="Password Generator")
+        self.label1.pack(padx=15, pady=10, side="top")
+        self.entry1 = tk.Entry(self.toplevel1)
+        self.entry1.pack(side="top")
+        self.button1 = tk.Button(self.toplevel1, command=self.generate)
+        self.button1.configure(text="Fill Password")
+        self.button1.pack(pady=10, side="top")
+        self.lbl_options = tk.Label(self.toplevel1)
+        self.lbl_options.configure(font="{calibri} 14 {bold}", text="Options")
+        self.lbl_options.pack(side="top")
+        self.lbl_length = tk.Label(self.toplevel1)
+        self.lbl_length.configure(text="Length")
+        self.lbl_length.pack(pady=10, side="top")
+        self.ent_length = tk.Entry(self.toplevel1, textvariable=self.length)
+        self.ent_length.pack(side="top")
+        self.chk_special = tk.Checkbutton(self.toplevel1)
+        self.chk_special.configure(text="Special Characters")
+        self.chk_special.pack(pady=10, side="top")
 
-This software will generate a safe, randomised password for you to use to secure all your important files.
-First select your range of characters, then see the usage instructions below for the required options:
+        # Main widget
+        self.mainwindow = self.toplevel1
 
--a: Letters in Lowercase
--A: Letters in Uppercase
--1: Numbers
--S: Special Characters
+    def generate(self):
+        self.entry1.delete(0, "end")
+        lowerLetters = "qwertyuiopasdfghjklzxcvbnm"
+        upperLetters = lowerLetters.upper()
+        numbers = "1234567890"
+        special_chars = '!@#$%^&*()[]{}/\\'
 
-Optionally, you can add them together in the following example:
+        combined = lowerLetters + upperLetters + numbers + special_chars
+        output = ""
+        for x in range(int(self.ent_length.get())):
+            output = output + random.choice(combined)
 
-15 -a -A -n -S
+        self.entry1.insert(0, output)
 
-"""
-
-lowerLetters = "qwertyuiopasdfghjklzxcvbnm"
-upperLetters = lowerLetters.upper()
-numbers = "1234567890"
-special_chars = '!@#$%^&*()[]{}/\\'
-
-
-def main():
-
-    print(intro_string, end="")
-    mix = string_range = output = ""
-    x = input(">> ")
-
-    for i in x:
-        if i != " ":
-            string_range = string_range + i
-        else:
-            break
-    string_range = int(string_range)
-
-    if "-a" in x:
-        mix = mix + lowerLetters
-    if "-A" in x:
-        mix = mix + upperLetters
-    if "-n" in x:
-        mix = mix + numbers
-    if "-S" in x:
-        mix = mix + special_chars
-
-    for o in range(string_range):
-        if mix:
-            output = output + random.choice(mix)
-        else:
-            print("Cannot proceed without additional parameters")
-            repeat = input("Restart? (Y/N) ")
-            if repeat.upper() == "Y":
-                paste_instructions = False
-                main()
-            elif repeat.upper() == "N":
-                print("Thanks for using Password Generator.")
-                quit()
-            else:
-                quit()
-
-    print(f"Generated Password: {output}")
-    repeat = input("Generate another password? (Y/N) ")
-    if repeat.upper() == "Y":
-        main()
-    elif repeat.upper() == "N":
-        print("Thanks for using Password Generator.")
-        quit()
-    else:
-        quit()
+    def run(self):
+        self.mainwindow.mainloop()
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    app = PasswordGen()
+    app.run()
